@@ -5,6 +5,8 @@ from english_words import english_words_lower_alpha_set
 from datetime import date
 import random
 
+skip = 0
+
 def getWordList():
     list = []
     for i in english_words_lower_alpha_set:
@@ -14,6 +16,7 @@ def getWordList():
 
 def getScore(str, word):
     score = ""
+    scoreU = ""
     letters = []
     for i in word:
         letters.append(i)
@@ -21,13 +24,21 @@ def getScore(str, word):
     for i in range(len(str)):
         if str[i] == word[i]:
             score += (colored(str[i], "green"))
-            letters.remove(str[i])
-        elif str[i] in letters:
+            scoreU += str[i]
+            if str[i] not in letters:
+                for j in range(len(scoreU)):
+                    print(j)
+                    if scoreU[j] == str[i]:
+                        score = 1
+                        return getScore(str, word)
+        elif str[i] in letters and score == 0:
             score += (colored(str[i], "yellow"))
+            scoreU += str[i]
             if str[i] in letters:
                 letters.remove(str[i])
         else:
             score += str[i]
+            scoreU += str[i]
     return score
 
 def getWord(list):
@@ -54,6 +65,7 @@ def main():
             print("Not a word. Try guess " + str(i + 1) + " again: ")
             guess = input()
         print(getScore(guess, word))
+        score = 0
         if guess == word:
             print("Congrats!")
             break
